@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mayad AI Voice</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+    radial-gradient(circle at 20% 10%,#273b80 0%,transparent 30%),
+    radial-gradient(circle at 90% 20%,#5b1d79 0%,transparent 28%),
+    #070914;
+    color:white;
+    padding:15px;
+}
+
+.app{
+    max-width:850px;
+    margin:auto;
+}
+
+/* HEADER */
+
+header{
+    text-align:center;
+    padding:25px 10px;
+}
+
+.logo{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:.5px;
+    background:linear-gradient(90deg,#00eaff,#7b61ff,#ff45c8);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.tagline{
+    color:#9da6c5;
+    margin-top:7px;
+    font-size:14px;
+}
+
+/* CARD */
+
+.card{
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:25px;
+    padding:20px;
+    box-shadow:0 25px 70px rgba(0,0,0,.4);
+    backdrop-filter:blur(20px);
+}
+
+.title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+/* TEXT AREA */
+
+textarea{
+    width:100%;
+    height:220px;
+    resize:none;
+    outline:none;
+    border:1px solid #292f52;
+    border-radius:18px;
+    background:#0b0f20;
+    color:white;
+    padding:18px;
+    font-size:17px;
+    line-height:1.6;
+}
+
+textarea:focus{
+    border-color:#725cff;
+    box-shadow:0 0 0 2px rgba(114,92,255,.12);
+}
+
+.counter{
+    text-align:right;
+    color:#737c9d;
+    font-size:12px;
+    margin-top:6px;
+}
+
+/* SETTINGS */
+
+.settings{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:18px;
+}
+
+.box{
+    background:#0b0f20;
+    border:1px solid #292f52;
+    border-radius:17px;
+    padding:15px;
+}
+
+.box label{
+    display:block;
+    color:#b8bfd8;
+    font-size:13px;
+    margin-bottom:9px;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    border-radius:11px;
+    border:1px solid #303758;
+    background:#151a30;
+    color:white;
+    outline:none;
+}
+
+.range{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+input[type=range]{
+    width:100%;
+    accent-color:#735cff;
+}
+
+.value{
+    color:#00eaff;
+    min-width:42px;
+    text-align:right;
+    font-size:13px;
+    font-weight:bold;
+}
+
+/* BUTTONS */
+
+.buttons{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:10px;
+    margin-top:18px;
+}
+
+button{
+    border:0;
+    border-radius:15px;
+    padding:14px 10px;
+    color:white;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+button:active{
+    transform:scale(.96);
+}
+
+.generate{
+    background:linear-gradient(135deg,#00cfff,#7658ff);
+    box-shadow:0 8px 25px rgba(80,100,255,.25);
+}
+
+.pause{
+    background:#c47b16;
+}
+
+.stop{
+    background:#d82e4d;
+}
+
+/* STATUS */
+
+.status{
+    margin-top:17px;
+    padding:13px;
+    border-radius:13px;
+    background:rgba(0,234,255,.06);
+    border:1px solid rgba(0,234,255,.12);
+    color:#aab3d0;
+    text-align:center;
+    font-size:13px;
+}
+
+/* FOOTER */
+
+footer{
+    text-align:center;
+    padding:22px;
+    color:#69718e;
+    font-size:12px;
+}
+
+.badge{
+    display:inline-block;
+    margin-top:8px;
+    padding:5px 10px;
+    border-radius:20px;
+    background:rgba(123,92,255,.12);
+    color:#9384ff;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .logo{
+        font-size:29px;
+    }
+
+    .settings{
+        grid-template-columns:1fr;
+    }
+
+    .buttons{
+        grid-template-columns:1fr;
+    }
+
+    textarea{
+        height:190px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+    <div class="logo">
+        🎙️ Mayad AI Voice
+    </div>
+
+    <div class="tagline">
+        Turn your text into natural speech
+    </div>
+
+</header>
+
+
+<div class="card">
+
+    <div class="title">
+        ✨ Create Your Voice
+    </div>
+
+
+    <textarea
+        id="text"
+        maxlength="5000"
+        placeholder="এখানে আপনার লেখা লিখুন...
+
+উদাহরণ:
+হ্যালো! আমি Mayad AI Voice.
+এখানে আপনার লেখা voice-এ শুনতে পারবেন।">
+    </textarea>
+
+    <div class="counter">
+        <span id="count">0</span> / 5000
+    </div>
+
+
+    <div class="settings">
+
+        <!-- VOICE -->
+
+        <div class="box">
+
+            <label>🎙️ Select Voice</label>
+
+            <select id="voice">
+                <option>Loading voices...</option>
+            </select>
+
+        </div>
+
+
+        <!-- SPEED -->
+
+        <div class="box">
+
+            <label>⚡ Speed</label>
+
+            <div class="range">
+
+                <input
+                    type="range"
+                    id="speed"
+                    min="0.5"
+                    max="2"
+                    step="0.1"
+                    value="1">
+
+                <span
+                    class="value"
+                    id="speedValue">
+                    1.0x
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- PITCH -->
+
+        <div class="box">
+
+            <label>🎵 Pitch</label>
+
+            <div class="range">
+
+                <input
+                    type="range"
+                    id="pitch"
+                    min="0"
+                    max="2"
+                    step="0.1"
+                    value="1">
+
+                <span
+                    class="value"
+                    id="pitchValue">
+                    1.0
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- VOLUME -->
+
+        <div class="box">
+
+            <label>🔊 Volume</label>
+
+            <div class="range">
+
+                <input
+                    type="range"
+                    id="volume"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value="1">
+
+                <span
+                    class="value"
+                    id="volumeValue">
+                    100%
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+        <button
+            class="generate"
+            onclick="generateVoice()">
+
+            ▶️ Generate Voice
+
+        </button>
+
+
+        <button
+            class="pause"
+            onclick="pauseResume()">
+
+            ⏸️ Pause
+
+        </button>
+
+
+        <button
+            class="stop"
+            onclick="stopVoice()">
+
+            ⏹️ Stop
+
+        </button>
+
+    </div>
+
+
+    <div
+        class="status"
+        id="status">
+
+        🟢 Ready — Write something and generate your voice.
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    © 2026 Mayad AI Voice
+
+    <div class="badge">
+        FREE TEXT TO VOICE
+    </div>
+
+</footer>
+
+</div>
+
+
+<script>
+
+let voices = [];
+
+const text =
+document.getElementById("text");
+
+const voice =
+document.getElementById("voice");
+
+const speed =
+document.getElementById("speed");
+
+const pitch =
+document.getElementById("pitch");
+
+const volume =
+document.getElementById("volume");
+
+const status =
+document.getElementById("status");
+
+
+/* CHARACTER COUNTER */
+
+text.addEventListener("input",function(){
+
+    document.getElementById("count")
+    .textContent=this.value.length;
+
+});
+
+
+/* RANGE VALUES */
+
+speed.addEventListener("input",function(){
+
+    document.getElementById("speedValue")
+    .textContent=this.value+"x";
+
+});
+
+
+pitch.addEventListener("input",function(){
+
+    document.getElementById("pitchValue")
+    .textContent=this.value;
+
+});
+
+
+volume.addEventListener("input",function(){
+
+    document.getElementById("volumeValue")
+    .textContent=
+    Math.round(this.value*100)+"%";
+
+});
+
+
+/* LOAD VOICES */
+
+function loadVoices(){
+
+    voices =
+    window.speechSynthesis.getVoices();
+
+    voice.innerHTML="";
+
+    if(voices.length===0){
+
+        let option=
+        document.createElement("option");
+
+        option.textContent=
+        "Default Browser Voice";
+
+        option.value="";
+
+        voice.appendChild(option);
+
+        return;
+    }
+
+
+    voices.forEach((v,index)=>{
+
+        let option=
+        document.createElement("option");
+
+        option.value=index;
+
+        option.textContent=
+        v.name+" — "+v.lang;
+
+        voice.appendChild(option);
+
+    });
+
+
+    /* Bengali voice priority */
+
+    let bn=
+    voices.findIndex(v =>
+        v.lang.toLowerCase().startsWith("bn")
+    );
+
+
+    if(bn>=0){
+
+        voice.value=bn;
+
+    }
+
+}
+
+
+speechSynthesis.onvoiceschanged=
+loadVoices;
+
+loadVoices();
+
+
+/* GENERATE */
+
+function generateVoice(){
+
+    let content=
+    text.value.trim();
+
+
+    if(!content){
+
+        status.textContent=
+        "⚠️ আগে কিছু text লিখুন।";
+
+        return;
+    }
+
+
+    speechSynthesis.cancel();
+
+
+    let speech=
+    new SpeechSynthesisUtterance(content);
+
+
+    let selected=
+    voice.value;
+
+
+    if(selected!==""){
+
+        speech.voice=
+        voices[selected];
+
+    }
+
+
+    speech.rate=
+    parseFloat(speed.value);
+
+    speech.pitch=
+    parseFloat(pitch.value);
+
+    speech.volume=
+    parseFloat(volume.value);
+
+
+    speech.onstart=function(){
+
+        status.textContent=
+        "🔊 Speaking...";
+
+    };
+
+
+    speech.onend=function(){
+
+        status.textContent=
+        "✅ Voice completed.";
+
+    };
+
+
+    speech.onerror=function(){
+
+        status.textContent=
+        "❌ Voice generation failed.";
+
+    };
+
+
+    speechSynthesis.speak(speech);
+
+}
+
+
+/* PAUSE / RESUME */
+
+function pauseResume(){
+
+    if(!speechSynthesis.speaking){
+
+        status.textContent=
+        "⚠️ No voice is playing.";
+
+        return;
+    }
+
+
+    if(speechSynthesis.paused){
+
+        speechSynthesis.resume();
+
+        status.textContent=
+        "▶️ Voice resumed.";
+
+    }else{
+
+        speechSynthesis.pause();
+
+        status.textContent=
+        "⏸️ Voice paused.";
+
+    }
+
+}
+
+
+/* STOP */
+
+function stopVoice(){
+
+    speechSynthesis.cancel();
+
+    status.textContent=
+    "⏹️ Voice stopped.";
+
+}
+
+</script>
+
+</body>
+</html>
